@@ -5,7 +5,7 @@ import Departments from '@/components/sections/Departments';
 import Activities from '@/components/sections/Activities';
 import Committee from '@/components/sections/Committee';
 import Testimonials from '@/components/sections/Testimonials';
-import Contact from '@/components/sections/Contact';
+import FAQ from '@/components/sections/FAQ';
 import Footer from '@/components/Footer';
 
 const Index = () => {
@@ -18,7 +18,7 @@ const Index = () => {
       <Activities />
       <Committee />
       <Testimonials />
-      <Contact />
+      <FAQ />
       <Footer />
     </div>
   );
