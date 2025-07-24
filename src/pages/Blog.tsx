@@ -4,7 +4,6 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BlogGrid from "@/components/sections/BlogGrid";
 import BlogSidebar from "@/components/sections/BlogSidebar";
-import TagsBar from "@/components/sections/TagsBar";
 import BlogFAQ from "@/components/sections/BlogFAQ";
 
 // Dummy blog data
@@ -223,9 +222,6 @@ const Blog = () => {
           </motion.p>
         </div>
       </section>
-
-      {/* Tags Section */}
-      <TagsBar />
 
       {/* Main Content Grid */}
       <div className="container mx-auto px-4 py-12">
