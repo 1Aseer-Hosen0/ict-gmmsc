@@ -123,7 +123,7 @@ const Navbar = () => {
                   href={item.href}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95}}
-                  className="text-gray-300 hover:text-white transition-colors duration-300 font-medium relative group"
+                  className="text-gray-300 hover:text-blue-500 transition-colors duration-300 font-medium relative group"
                 >
                   {item.title}
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
@@ -169,12 +169,11 @@ const Navbar = () => {
                   key={`mobile-${item.title}`}
                   to={item.href}
                   className="text-gray-300 hover:text-blue-500 text-2xl font-medium transition-colors duration-300"
-                  onClick={() => setIsMenuOpen(false)}
                 >
                   {item.title}
                 </Link>
               ))}
-              <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+              <Link to="/login">
                 <Button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 text-lg rounded-lg transition-colors duration-300">
                   Login
                 </Button>

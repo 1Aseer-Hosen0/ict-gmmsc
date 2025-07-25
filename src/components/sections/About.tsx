@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
 import { ArrowRight, Users, Target, Lightbulb } from 'lucide-react';
 
 const About = () => {
@@ -23,7 +23,7 @@ const About = () => {
   ];
 
   return (
-    <section id="about" className="py-20 bg-gradient-to-b from-background to-secondary/20">
+    <section id="about" className="py-20 bg-gradient-to-b from-background to-secondary/20 overflow-x-hidden">
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Image Side */}
@@ -140,6 +140,7 @@ const About = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
+              <Link to="/about">
               <Button 
                 size="lg"
                 className="bg-gradient-to-r from-club-blue to-club-accent hover:from-club-accent hover:to-club-blue text-white px-8 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group"
@@ -147,6 +148,7 @@ const About = () => {
                 Know More
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
+              </Link>
             </motion.div>
           </motion.div>
         </div>

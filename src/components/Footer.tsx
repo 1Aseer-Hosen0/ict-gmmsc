@@ -7,10 +7,9 @@ import {
   Github, 
   Mail, 
   Phone, 
-  MapPin,
-  Code,
-  Heart
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import logo from '@/assets/logo.png'; 
 
 const Footer = () => {
   const socialLinks = [
@@ -22,31 +21,30 @@ const Footer = () => {
   ];
 
   const quickLinks = [
-    { name: 'About Us', href: '#about' },
-    { name: 'Events', href: '#events' },
-    { name: 'Gallery', href: '#gallery' },
-    { name: 'Blog', href: '#blog' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'About Us', href: '/about' },
+    { name: 'Events', href: '/events' },
+    { name: 'Gallery', href: '/gallery' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Contact', href: '/contact' },
   ];
 
   const departments = [
-    { name: 'Programming', href: '#' },
-    { name: 'Content Creation', href: '#' },
-    { name: 'IT Infrastructure', href: '#' },
-    { name: 'Gaming', href: '#' },
+    { name: 'Programming'},
+    { name: 'Content Creation'},
+    { name: 'Robotics'},
+    { name: 'Gaming'},
   ];
 
   const contactInfo = [
-    { icon: Mail, text: 'hello@ictclub.com' },
-    { icon: Phone, text: '+1 (555) 123-4567' },
-    { icon: MapPin, text: 'Tech Building, Room 205' },
+    { icon: Mail, text: 'ictgmmscclub@gmail.com' },
+    { icon: Phone, text: '0172983745' },
   ];
 
   return (
     <footer className="bg-gradient-to-b from-background to-club-darker border-t border-border/20">
       <div className="container mx-auto px-6">
         {/* Main Footer Content */}
-        <div className="py-16">
+        <div className="py-3">
           <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-12">
             {/* Brand Section */}
             <motion.div
@@ -57,9 +55,14 @@ const Footer = () => {
               className="space-y-6"
             >
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-club-blue to-club-accent rounded-xl flex items-center justify-center">
-                  <Code className="w-6 h-6 text-white" />
-                </div>
+              <Link to="/">
+                <motion.img
+                whileHover={{ scale: 1.05 }}
+                src={logo}
+                alt="ICT Club Logo"
+                className="h-12 w-auto"
+                />
+            </Link>
                 <span className="text-2xl font-bold text-foreground">ICT Club</span>
               </div>
               
@@ -119,13 +122,12 @@ const Footer = () => {
               <ul className="space-y-4">
                 {departments.map((dept, index) => (
                   <li key={index}>
-                    <motion.a
-                      href={dept.href}
+                    <motion.div
                       whileHover={{ x: 5 }}
                       className="text-muted-foreground hover:text-club-blue transition-all duration-300 block"
                     >
                       {dept.name}
-                    </motion.a>
+                    </motion.div>
                   </li>
                 ))}
               </ul>
@@ -180,9 +182,7 @@ const Footer = () => {
         >
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div className="flex items-center space-x-2 text-muted-foreground text-sm">
-              <span>© 2024 ICT Club. Made with</span>
-              <Heart className="w-4 h-4 text-red-500 fill-current" />
-              <span>by our community</span>
+              <span>© 2025 GMMSC ICT Club.</span>
             </div>
             
             <div className="flex items-center space-x-6 text-sm">

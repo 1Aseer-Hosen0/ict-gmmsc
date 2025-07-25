@@ -118,11 +118,7 @@ const FAQ = () => {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm">
                 <div className="flex items-center gap-2">
                   <span className="text-muted-foreground">Email:</span>
-                  <span className="text-club-blue font-medium">hello@ictclub.com</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground">Location:</span>
-                  <span className="text-club-blue font-medium">Tech Building, Room 205</span>
+                  <span className="text-club-blue font-medium">ictgmmscclub@gmail.com</span>
                 </div>
               </div>
             </motion.div>

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar, Users, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Activities = () => {
   const activities = [
@@ -10,7 +11,7 @@ const Activities = () => {
       title: 'Annual Tech Hackathon 2024',
       date: 'March 15-17, 2024',
       participants: '150+ Students',
-      image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&h=300&fit=crop',
+      image: '/src/assets/esports.jpg',
       description: 'A 48-hour intensive coding competition where students collaborated to build innovative solutions for real-world problems.',
       tags: ['Hackathon', 'Programming', 'Innovation'],
       color: 'from-blue-500 to-purple-600',
@@ -20,7 +21,7 @@ const Activities = () => {
       title: 'AI & Machine Learning Workshop',
       date: 'February 8-10, 2024',
       participants: '80+ Attendees',
-      image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=300&fit=crop',
+      image: '/src/assets/july.jpg',
       description: 'An intensive workshop covering the fundamentals of AI and ML, featuring hands-on projects and industry expert speakers.',
       tags: ['AI/ML', 'Workshop', 'Education'],
       color: 'from-green-500 to-teal-600',
@@ -130,6 +131,7 @@ const Activities = () => {
         </div>
 
         {/* View All Events CTA */}
+        <Link to="/events">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -145,6 +147,7 @@ const Activities = () => {
             <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </Button>
         </motion.div>
+        </Link>
       </div>
     </section>
   );
