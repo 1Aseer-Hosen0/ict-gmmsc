@@ -1,6 +1,6 @@
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/sections/Intro';
-import About from '@/components/sections/About';
+import AboutSrt from '@/components/sections/AboutSrt';
 import Departments from '@/components/sections/Departments';
 import Activities from '@/components/sections/Activities';
 import Committee from '@/components/sections/Committee';
@@ -35,10 +35,10 @@ const Index = () => {
         { number: '10+', label: 'Projects Completed' },
       ]}
       />
-      <About />
+      <AboutSrt />
       <Departments />
       <Activities />
-      <Committee startIndex={0} limit={3} />
+      <Committee activeSession="2023-24" limit={3} showHeader={true} />
       <Testimonials />
       <FAQ />
       <Footer />

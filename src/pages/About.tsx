@@ -1,11 +1,23 @@
+import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/sections/Intro';
+import AboutSrt from '@/components/sections/AboutSrt';
 import Committee from '@/components/sections/Committee';
 import GalleryPreview from '@/components/sections/GalleryPreview';
+import PanelBar from '@/components/sections/PanelBar';
 import { Calendar, Users } from 'lucide-react';
 
 const About = () => {
+  const [activeSession, setActiveSession] = useState("2023-24");
+
+  const sessions = [
+    { id: "2023-24", label: "2023-24" },
+    { id: "2022-23", label: "2022-23" },
+    { id: "2021-22", label: "2021-22" },
+    { id: "Others", label: "Others" },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -18,12 +30,10 @@ const About = () => {
       primaryButton={{
         text: 'Explore Events',
         icon: <Calendar className="mr-2 h-5 w-5" />,
-        onClick: () => alert('Explore Events Clicked!'),
       }}
       secondaryButton={{
         text: 'Join Community',
         icon: <Users className="mr-2 h-5 w-5" />,
-        onClick: () => alert('Join Community Clicked!'),
       }}
       stats={[
         { number: '500+', label: 'Active Members' },
@@ -31,7 +41,13 @@ const About = () => {
         { number: '10+', label: 'Projects Completed' },
       ]}
       />
-        <Committee startIndex={0} limit={6} />
+      <AboutSrt />
+        <PanelBar
+        sessions={sessions}
+        activeSession={activeSession}
+        onSessionChange={setActiveSession}
+      />
+        <Committee activeSession={activeSession} showHeader={false} />
         <GalleryPreview />
       </main>
       <Footer />

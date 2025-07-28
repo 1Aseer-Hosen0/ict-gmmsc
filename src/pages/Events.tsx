@@ -2,8 +2,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import CategoryMenu from "@/components/sections/CategoryMenu";
 import EventsGrid from "@/components/sections/EventsGrid";
+import DynamicBar from "@/components/sections/DynamicBar";
 
 const Events = () => {
   const [activeCategory, setActiveCategory] = useState("National");
@@ -119,11 +119,19 @@ const Events = () => {
           </motion.div>
         </section>
 
-        {/* Category Menu */}
-        <CategoryMenu 
-          activeCategory={activeCategory}
-          onCategoryChange={setActiveCategory}
-        />
+        {/* Dynamic Bar */}
+<DynamicBar
+  title="Our Events"
+  description="Explore our events by category"
+  items={[
+    { id: "National", label: "National", count: 3, tooltip: "Our National Events" },
+    { id: "Intra", label: "Intra", count: 2, tooltip: "Our Intra Events" },
+    { id: "Workshops", label: "Workshops", count: 6, tooltip: "Our Workshops" },
+    { id: "Others", label: "Others", count: 4, tooltip: "See Other Events" },
+  ]}
+  activeItem={activeCategory}
+  onItemChange={setActiveCategory}
+/>
 
         {/* Events Grid */}
         <EventsGrid activeCategory={activeCategory} />

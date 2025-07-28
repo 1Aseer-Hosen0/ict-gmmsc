@@ -1,13 +1,16 @@
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Linkedin, Github, Mail } from 'lucide-react';
+import PanelBar from './PanelBar';
 
 interface CommitteeProps {
   startIndex?: number;
   limit?: number;
+  activeSession?: string;
+  showHeader?: boolean;
 }
 
-const Committee: React.FC<CommitteeProps> = ({ startIndex = 0, limit }) => {
+const Committee: React.FC<CommitteeProps> = ({ startIndex = 0, limit, activeSession, showHeader = true }) => {
   const members = [
     {
       id: 1,
@@ -15,6 +18,7 @@ const Committee: React.FC<CommitteeProps> = ({ startIndex = 0, limit }) => {
       role: 'President',
       image: "/src/assets/mahdi.jpg",
       bio: 'Leading the club with vision and passion for technology.',
+      session: '2023-24',
       social: { linkedin: '#', github: '#', email: 'alex@ictclub.com' }
     },
     {
@@ -23,6 +27,7 @@ const Committee: React.FC<CommitteeProps> = ({ startIndex = 0, limit }) => {
       role: 'Vice President',
       image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=300&h=300&fit=crop&crop=face',
       bio: 'Passionate about AI and machine learning applications.',
+      session: '2023-24',
       social: { linkedin: '#', github: '#', email: 'sarah@ictclub.com' }
     },
     {
@@ -31,6 +36,7 @@ const Committee: React.FC<CommitteeProps> = ({ startIndex = 0, limit }) => {
       role: 'Technical Lead',
       image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face',
       bio: 'Full-stack developer with expertise in modern web technologies.',
+      session: '2023-24',
       social: { linkedin: '#', github: '#', email: 'michael@ictclub.com' }
     },
     {
@@ -39,6 +45,7 @@ const Committee: React.FC<CommitteeProps> = ({ startIndex = 0, limit }) => {
       role: 'Events Coordinator',
       image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face',
       bio: 'Organizing amazing events that bring our community together.',
+      session: '2022-23',
       social: { linkedin: '#', github: '#', email: 'emily@ictclub.com' }
     },
     {
@@ -47,6 +54,7 @@ const Committee: React.FC<CommitteeProps> = ({ startIndex = 0, limit }) => {
       role: 'Marketing Head',
       image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&crop=face',
       bio: 'Creative mind behind our digital presence and content strategy.',
+      session: '2022-23',
       social: { linkedin: '#', github: '#', email: 'david@ictclub.com' }
     },
     {
@@ -55,39 +63,44 @@ const Committee: React.FC<CommitteeProps> = ({ startIndex = 0, limit }) => {
       role: 'Treasurer',
       image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&h=300&fit=crop&crop=face',
       bio: 'Managing club finances and ensuring sustainable growth.',
+      session: '2021-22',
       social: { linkedin: '#', github: '#', email: 'lisa@ictclub.com' }
     },
   ];
 
-  // Determine which members to display
+  // Filter members by activeSession
+  const filteredMembers = activeSession
+    ? members.filter(member => member.session === activeSession)
+    : members;
+
+  // Limit members if needed
   const displayedMembers = limit
-    ? members.slice(startIndex, startIndex + limit)
-    : members.slice(startIndex);
+    ? filteredMembers.slice(startIndex, startIndex + limit)
+    : filteredMembers.slice(startIndex);
 
   return (
     <section id="committee" className="py-20 bg-gradient-to-b from-secondary/20 to-background">
       <div className="container mx-auto px-6">
-        {/* Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <div className="inline-block px-4 py-2 bg-club-blue/10 text-club-blue rounded-full text-sm font-medium mb-4">
-            Our Team
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
-            Current{' '}
-            <span className="bg-gradient-to-r from-club-blue to-club-accent bg-clip-text text-transparent">
-              Committee
-            </span>
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Meet the dedicated individuals who lead our club and drive innovation in our community.
-          </p>
-        </motion.div>
+      {/* Heading - Only show if showHeader is true */}
+      {showHeader && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="inline-block px-4 py-2 bg-club-blue/10 text-club-blue rounded-full text-sm font-medium mb-4">
+              Our Team
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+              {activeSession ? `${activeSession} Committee` : 'Current Committee'}
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Meet the dedicated individuals who lead our club and drive innovation in our community.
+            </p>
+          </motion.div>
+        )}
 
         {/* Members Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

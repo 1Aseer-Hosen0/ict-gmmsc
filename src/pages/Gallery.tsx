@@ -1,9 +1,9 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import FilterBar from '@/components/sections/FilterBar';
 import GalleryGrid from '@/components/sections/GalleryGrid';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import DynamicBar from '@/components/sections/DynamicBar';
 
 const Gallery = () => {
   const [activeFilter, setActiveFilter] = useState('All');
@@ -180,8 +180,20 @@ const Gallery = () => {
         </motion.div>
       </section>
 
-      {/* Filter Bar */}
-      <FilterBar activeFilter={activeFilter} onFilterChange={setActiveFilter} />
+      {/* Dynamic Bar */}
+      <DynamicBar
+  title="Browse Our Collection"
+  description="Filter through our diverse collection of images from various events and activities"
+  items={[
+    { id: "All", label: "All", count: 150, tooltip: "Show all images" },
+    { id: "Events", label: "Events", count: 85, tooltip: "View event galleries" },
+    { id: "Workshops", label: "Workshops", count: 45, tooltip: "View workshop galleries" },
+    { id: "Others", label: "Others", count: 20, tooltip: "Other images" },
+  ]}
+  activeItem={activeFilter}
+  onItemChange={setActiveFilter}
+/>
+
       
       {/* Gallery Grid */}
       <GalleryGrid activeFilter={activeFilter} />

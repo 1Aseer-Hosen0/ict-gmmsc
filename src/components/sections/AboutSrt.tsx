@@ -1,9 +1,14 @@
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import IctTeam from "@/assets/about.png";
 import { ArrowRight, Users, Target, Lightbulb } from 'lucide-react';
 
-const About = () => {
+const AboutSrt = () => {
+
+  const location = useLocation();
+  const isHomePage = location.pathname === "/" || location.pathname === "/home";
+
   const features = [
     {
       icon: Users,
@@ -28,44 +33,43 @@ const About = () => {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Image Side */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <div className="relative">
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="relative overflow-hidden rounded-3xl shadow-2xl"
-              >
-                <img
-                  src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=400&fit=crop"
-                  alt="ICT Club Team"
-                  className="w-full h-96 object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-tr from-club-blue/20 to-transparent" />
-              </motion.div>
-              
-              {/* Floating card */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="absolute -bottom-8 -right-8 bg-card p-6 rounded-2xl shadow-xl border border-border"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-r from-club-blue to-club-accent rounded-xl flex items-center justify-center">
-                    <Users className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-foreground">500+</div>
-                    <div className="text-sm text-muted-foreground">Active Members</div>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
+  initial={{ opacity: 0, x: -50 }}
+  whileInView={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.8 }}
+  viewport={{ once: true }}
+  className="relative w-full flex justify-center"
+>
+  <motion.div
+    whileHover={{ scale: 1.02 }}
+    className="relative overflow-hidden rounded-3xl shadow-2xl w-full max-w-md"
+  >
+    <img
+      src={IctTeam}
+      alt="ICT Club Team"
+      className="w-full h-auto object-cover object-center rounded-3xl"
+    />
+    <div className="absolute inset-0 bg-gradient-to-tr from-club-blue/20 to-transparent" />
+  </motion.div>
+
+  {/* Floating card */}
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.8, delay: 0.3 }}
+    className="absolute -bottom-8 -right-8 bg-card p-6 rounded-2xl shadow-xl border border-border"
+  >
+    <div className="flex items-center space-x-3">
+      <div className="w-12 h-12 bg-gradient-to-r from-club-blue to-club-accent rounded-xl flex items-center justify-center">
+        <Users className="w-6 h-6 text-white" />
+      </div>
+      <div>
+        <div className="text-2xl font-bold text-foreground">500+</div>
+        <div className="text-sm text-muted-foreground">Active Members</div>
+      </div>
+    </div>
+  </motion.div>
+</motion.div>
+
 
           {/* Content Side */}
           <motion.div
@@ -135,6 +139,7 @@ const About = () => {
               ))}
             </motion.div>
 
+            {isHomePage && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -150,11 +155,12 @@ const About = () => {
               </Button>
               </Link>
             </motion.div>
-          </motion.div>
+            )}
+            </motion.div>
         </div>
       </div>
     </section>
   );
 };
 
-export default About;
+export default AboutSrt;
