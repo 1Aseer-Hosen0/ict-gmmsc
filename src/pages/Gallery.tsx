@@ -1,203 +1,67 @@
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import GalleryGrid from '@/components/sections/GalleryGrid';
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-import DynamicBar from '@/components/sections/DynamicBar';
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import GalleryGrid from "@/components/sections/GalleryGrid";
+import { useState } from "react";
+import DynamicBar from "@/components/sections/DynamicBar";
+import HeroSection from "@/components/sections/Intro";
+import { Calendar, Image, Users } from "lucide-react";
 
 const Gallery = () => {
-  const [activeFilter, setActiveFilter] = useState('All');
+  const [activeFilter, setActiveFilter] = useState("All");
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Animated Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-primary/10">
-          {/* Floating Orbs */}
-          <motion.div
-            className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl"
-            animate={{
-              x: [0, 100, 0],
-              y: [0, 50, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-          <motion.div
-            className="absolute bottom-20 right-10 w-96 h-96 bg-accent/30 rounded-full blur-3xl"
-            animate={{
-              x: [0, -80, 0],
-              y: [0, -60, 0],
-              scale: [1, 0.8, 1],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-          <motion.div
-            className="absolute top-1/2 left-1/2 w-64 h-64 bg-secondary/25 rounded-full blur-2xl"
-            animate={{
-              x: [-50, 50, -50],
-              y: [-30, 30, -30],
-              rotate: [0, 180, 360],
-            }}
-            transition={{
-              duration: 12,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          />
 
-          {/* Floating Particles */}
-          {Array.from({ length: 20 }).map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-2 h-2 bg-primary/30 rounded-full"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [0, -30, 0],
-                x: [0, Math.random() * 40 - 20, 0],
-                opacity: [0.3, 0.8, 0.3],
-              }}
-              transition={{
-                duration: 3 + Math.random() * 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: Math.random() * 2,
-              }}
-            />
-          ))}
-
-          {/* Additional animated particles */}
-          {Array.from({ length: 15 }).map((_, i) => (
-            <motion.div
-              key={`particle-${i}`}
-              className="absolute w-1 h-1 bg-accent/40 rounded-full"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                scale: [1, 1.5, 1],
-                opacity: [0.2, 0.6, 0.2],
-                y: [0, -20, 0],
-              }}
-              transition={{
-                duration: 4 + Math.random() * 3,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: Math.random() * 3,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Grid Pattern Overlay */}
-        <div className="absolute inset-0 opacity-[0.02]">
-          <div className="grid grid-cols-12 gap-4 h-full">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="border-r border-foreground/20" />
-            ))}
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="space-y-6"
-          >
-            <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground via-primary to-accent">
-              Gallery
-            </h1>
-            
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
-            >
-              Capturing moments, preserving memories. Explore our collection of events, workshops, and achievements.
-            </motion.p>
-
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="grid grid-cols-3 gap-8 max-w-md mx-auto mt-12"
-            >
-              {[
-                { number: "500+", label: "Photos" },
-                { number: "50+", label: "Events" },
-                { number: "3", label: "Years" },
-              ].map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div className="text-2xl md:text-3xl font-bold text-primary">
-                    {stat.number}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </motion.div>
-          </motion.div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.5 }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="w-6 h-10 border-2 border-primary/50 rounded-full flex justify-center"
-          >
-            <motion.div
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className="w-1 h-3 bg-primary rounded-full mt-2"
-            />
-          </motion.div>
-        </motion.div>
-      </section>
+      <HeroSection
+      backgroundImage="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&h=1080&fit=crop"
+      icon={<Image className="w-14 h-14 text-white" />}
+      title="Our Photos"
+      description="Capturing moments, preserving memories. Explore our collection of events, workshops, and achievements."
+      primaryButton={{
+        text: 'Explore Events',
+        icon: <Calendar className="mr-2 h-5 w-5" />,
+        href: '/events',
+      }}
+      secondaryButton={{
+        text: 'Join Community',
+        icon: <Users className="mr-2 h-5 w-5" />,
+        href: "/login",
+      }}
+      stats={[
+        { number: '500+', label: 'Photos' },
+        { number: '15+', label: 'Events' },
+        { number: '4+', label: 'Years' },
+      ]}
+      />
 
       {/* Dynamic Bar */}
       <DynamicBar
-  title="Browse Our Collection"
-  description="Filter through our diverse collection of images from various events and activities"
-  items={[
-    { id: "All", label: "All", count: 150, tooltip: "Show all images" },
-    { id: "Events", label: "Events", count: 85, tooltip: "View event galleries" },
-    { id: "Workshops", label: "Workshops", count: 45, tooltip: "View workshop galleries" },
-    { id: "Others", label: "Others", count: 20, tooltip: "Other images" },
-  ]}
-  activeItem={activeFilter}
-  onItemChange={setActiveFilter}
-/>
+        title="Browse Our Collection"
+        description="Filter through our diverse collection of images from various events and activities"
+        items={[
+          { id: "All", label: "All", count: 150, tooltip: "Show all images" },
+          {
+            id: "Events",
+            label: "Events",
+            count: 85,
+            tooltip: "View event galleries",
+          },
+          {
+            id: "Workshops",
+            label: "Workshops",
+            count: 45,
+            tooltip: "View workshop galleries",
+          },
+          { id: "Others", label: "Others", count: 20, tooltip: "Other images" },
+        ]}
+        activeItem={activeFilter}
+        onItemChange={setActiveFilter}
+      />
 
-      
       {/* Gallery Grid */}
       <GalleryGrid activeFilter={activeFilter} />
-      
+
       <Footer />
     </div>
   );

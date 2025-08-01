@@ -1,7 +1,7 @@
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, Zap } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface Stat {
   number: string;
@@ -11,8 +11,9 @@ interface Stat {
 interface ButtonProps {
   text: string;
   icon?: React.ReactNode;
-  variant?: 'default' | 'outline';
+  variant?: "default" | "outline";
   href?: string;
+  onClick?: () => void;
 }
 
 interface HeroSectionProps {
@@ -52,13 +53,21 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           <motion.div
             key={i}
             className="absolute w-2 h-2 bg-club-blue/20 rounded-full"
-            initial={{ 
-              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
-              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+            initial={{
+              x:
+                Math.random() *
+                (typeof window !== "undefined" ? window.innerWidth : 1200),
+              y:
+                Math.random() *
+                (typeof window !== "undefined" ? window.innerHeight : 800),
             }}
             animate={{
-              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1200),
-              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+              x:
+                Math.random() *
+                (typeof window !== "undefined" ? window.innerWidth : 1200),
+              y:
+                Math.random() *
+                (typeof window !== "undefined" ? window.innerHeight : 800),
             }}
             transition={{
               duration: Math.random() * 10 + 10,
@@ -81,7 +90,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           }}
         />
 
-<motion.div
+        <motion.div
           className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-club-accent/10 rounded-full blur-3xl"
           animate={{
             scale: [1.2, 1, 1.2],
@@ -96,24 +105,24 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
       {/* Hero Content */}
       <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
-      <motion.div
+        <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: 'easeOut' }}
+          transition={{ duration: 1, ease: "easeOut" }}
           className="mb-8"
         >
           <div className="relative mb-8">
             <motion.div
               className="w-28 h-28 mx-auto bg-gradient-to-br from-club-blue to-club-accent rounded-3xl flex items-center justify-center shadow-2xl"
               whileHover={{ scale: 1.05, rotate: 5 }}
-              transition={{ type: 'spring', stiffness: 300 }}
+              transition={{ type: "spring", stiffness: 300 }}
             >
               {icon}
             </motion.div>
             <motion.div
               className="absolute -top-4 -right-4 w-8 h-8 bg-club-accent rounded-full flex items-center justify-center"
               animate={{ rotate: 360 }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
             >
               <Zap className="w-4 h-4 text-white" />
             </motion.div>
@@ -144,32 +153,42 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           transition={{ duration: 1, delay: 0.9 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
         >
-          {primaryButton && (
-  <Link to={primaryButton.href || '#'}>
-    <Button
-      size="lg"
-      className="bg-gradient-to-r from-club-blue to-club-accent hover:from-club-accent hover:to-club-blue text-white px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group"
-    >
-      {primaryButton.icon}
-      {primaryButton.text}
-      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-    </Button>
-  </Link>
-)}
+          {primaryButton &&
+            (primaryButton.onClick ? (
+              <Button
+                size="lg"
+                onClick={primaryButton.onClick}
+                className="bg-gradient-to-r from-club-blue to-club-accent hover:from-club-accent hover:to-club-blue text-white px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group"
+              >
+                {primaryButton.icon}
+                {primaryButton.text}
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            ) : (
+              <Link to={primaryButton.href || "#"}>
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-club-blue to-club-accent hover:from-club-accent hover:to-club-blue text-white px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group"
+                >
+                  {primaryButton.icon}
+                  {primaryButton.text}
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            ))}
 
-{secondaryButton && (
-  <Link to={secondaryButton.href || '#'}>
-    <Button
-      variant="outline"
-      size="lg"
-      className="border-2 border-club-blue text-club-blue hover:bg-club-blue hover:text-white px-8 py-6 text-lg rounded-xl transition-all duration-300"
-    >
-      {secondaryButton.icon}
-      {secondaryButton.text}
-    </Button>
-  </Link>
-)}
-
+          {secondaryButton && (
+            <Link to={secondaryButton.href || "#"}>
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-2 border-club-blue text-club-blue hover:bg-club-blue hover:text-white px-8 py-6 text-lg rounded-xl transition-all duration-300"
+              >
+                {secondaryButton.icon}
+                {secondaryButton.text}
+              </Button>
+            </Link>
+          )}
         </motion.div>
 
         {/* Stats */}
@@ -181,13 +200,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto"
           >
             {stats.map((stat, index) => (
-              <motion.div 
-                key={index} 
+              <motion.div
+                key={index}
                 className="text-center p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50 hover:bg-card/70 transition-all duration-300"
                 whileHover={{ scale: 1.05 }}
               >
-                <div className="text-3xl font-bold text-club-blue mb-2">{stat.number}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <div className="text-3xl font-bold text-club-blue mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {stat.label}
+                </div>
               </motion.div>
             ))}
           </motion.div>

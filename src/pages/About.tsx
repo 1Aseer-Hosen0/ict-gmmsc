@@ -30,10 +30,12 @@ const About = () => {
       primaryButton={{
         text: 'Explore Events',
         icon: <Calendar className="mr-2 h-5 w-5" />,
+        href: "/events",
       }}
       secondaryButton={{
         text: 'Join Community',
         icon: <Users className="mr-2 h-5 w-5" />,
+        href: "/login",
       }}
       stats={[
         { number: '500+', label: 'Active Members' },

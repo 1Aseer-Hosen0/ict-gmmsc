@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HelpCircle, Edit3, Users } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const BlogFAQ = () => {
   return (
@@ -31,10 +32,12 @@ const BlogFAQ = () => {
                   How to join the club blog authors?
                 </h3>
                 <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-                  To become a blog author for our ICT Club, you need to be an active member of the club. 
-                  Submit your writing samples and topic proposals to the blog committee. We welcome 
-                  articles about programming, technology trends, project tutorials, and career advice. 
-                  Contact our editorial team through the club's official channels to get started.
+                  To become a blog author for our ICT Club, you need to be an
+                  active member of the club. Submit your writing samples and
+                  topic proposals to the blog committee. We welcome articles
+                  about programming, technology trends, project tutorials, and
+                  career advice. Contact our editorial team through the club's
+                  official channels to get started.
                 </p>
               </div>
 
@@ -46,34 +49,42 @@ const BlogFAQ = () => {
                       <Users className="h-6 w-6 text-club-blue" />
                     </div>
                   </div>
-                  <h4 className="font-semibold text-foreground">Join Our Community</h4>
+                  <h4 className="font-semibold text-foreground">
+                    Join Our Community
+                  </h4>
                   <p className="text-sm text-muted-foreground">
-                    Connect with fellow tech enthusiasts and share your knowledge with the community.
+                    Connect with fellow tech enthusiasts and share your
+                    knowledge with the community.
                   </p>
                 </div>
-                
+
                 <div className="text-center space-y-3">
                   <div className="flex justify-center">
                     <div className="p-2 bg-primary/10 rounded-full">
                       <Edit3 className="h-6 w-6 text-primary" />
                     </div>
                   </div>
-                  <h4 className="font-semibold text-foreground">Share Your Expertise</h4>
+                  <h4 className="font-semibold text-foreground">
+                    Share Your Expertise
+                  </h4>
                   <p className="text-sm text-muted-foreground">
-                    Write about your projects, learning experiences, and help others in their tech journey.
+                    Write about your projects, learning experiences, and help
+                    others in their tech journey.
                   </p>
                 </div>
               </div>
 
               {/* Contact Button */}
               <div className="text-center pt-6">
-                <motion.button
-                  className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Contact Editorial Team
-                </motion.button>
+                <Link to="/contact">
+                  <motion.button
+                    className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Contact Editorial Team
+                  </motion.button>
+                </Link>
               </div>
             </CardContent>
           </Card>

@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BlogGrid from "@/components/sections/BlogGrid";
 import BlogSidebar from "@/components/sections/BlogSidebar";
 import BlogFAQ from "@/components/sections/BlogFAQ";
+import HeroSection from "@/components/sections/Intro";
+import { SquarePen, Users, BookOpenText } from "lucide-react";
 
 // Dummy blog data
 const allBlogs = [
@@ -174,6 +175,13 @@ const allBlogs = [
 ];
 
 const Blog = () => {
+
+  const faqRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToFAQ = () => {
+    faqRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   const [currentPage, setCurrentPage] = useState(1);
   const [randomBlogs, setRandomBlogs] = useState<typeof allBlogs>([]);
   const blogsPerPage = 15;
@@ -199,29 +207,27 @@ const Blog = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-club-dark to-club-darker">
       <Navbar />
       
-      {/* Hero Section */}
-      <section className="pt-20 pb-16 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-club-blue/10 to-primary/5"></div>
-        <div className="container mx-auto text-center relative z-10">
-          <motion.h1 
-            className="text-4xl md:text-6xl font-bold text-foreground mb-6"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            Our Blogs
-          </motion.h1>
-          <motion.p 
-            className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            Discover insights, tutorials, and stories from our ICT Club community. 
-            Stay updated with the latest in technology and programming.
-          </motion.p>
-        </div>
-      </section>
+      <HeroSection
+      backgroundImage="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&h=1080&fit=crop"
+      icon={<BookOpenText className="w-14 h-14 text-white" />}
+      title="Our Blogs"
+      description="Discover insights, tutorials, and stories from our ICT Club community. Stay updated with the latest in technology and programming."
+      primaryButton={{
+        text: 'Write a Blog',
+        icon: <SquarePen className="mr-2 h-5 w-5" />,
+        onClick: scrollToFAQ,
+      }}
+      secondaryButton={{
+        text: 'Join Community',
+        icon: <Users className="mr-2 h-5 w-5" />,
+        href: "/login",
+      }}
+      stats={[
+        { number: '500+', label: 'Active Members' },
+        { number: '15+', label: 'Blogs' },
+        { number: '10+', label: 'Projects Completed' },
+      ]}
+      />
 
       {/* Main Content Grid */}
       <div className="container mx-auto px-4 py-12">
@@ -244,7 +250,9 @@ const Blog = () => {
       </div>
 
       {/* FAQ Section */}
+      <div ref={faqRef}>
       <BlogFAQ />
+      </div>
 
       <Footer />
     </div>

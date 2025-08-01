@@ -90,34 +90,6 @@ const BlogSidebar = ({ blogs }: BlogSidebarProps) => {
         </Card>
       </motion.div>
 
-      {/* Newsletter Signup */}
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.4 }}
-      >
-        <Card className="bg-gradient-to-br from-primary/10 to-club-blue/5 border-primary/20">
-          <CardHeader>
-            <CardTitle className="text-lg">Stay Updated</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              Get the latest tech insights and programming tutorials delivered to your inbox.
-            </p>
-            <div className="space-y-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full px-3 py-2 bg-background border border-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-              />
-              <button className="w-full bg-primary text-primary-foreground py-2 px-4 rounded-md text-sm font-medium hover:bg-primary/90 transition-colors">
-                Subscribe
-              </button>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
       {/* Popular Tags */}
       <motion.div
         initial={{ opacity: 0, x: 20 }}

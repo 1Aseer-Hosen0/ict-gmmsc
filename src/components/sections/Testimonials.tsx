@@ -196,26 +196,6 @@ const Testimonials = () => {
             </motion.button>
           </div>
         </div>
-
-        {/* Bottom stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          viewport={{ once: true }}
-          className="grid grid-cols-3 gap-8 max-w-lg mx-auto mt-16 text-center"
-        >
-          {[
-            { number: '95%', label: 'Employment Rate' },
-            { number: '$85K', label: 'Average Salary' },
-            { number: '200+', label: 'Alumni Network' },
-          ].map((stat, index) => (
-            <div key={index}>
-              <div className="text-3xl font-bold text-club-blue mb-2">{stat.number}</div>
-              <div className="text-sm text-muted-foreground">{stat.label}</div>
-            </div>
-          ))}
-        </motion.div>
       </div>
     </section>
   );
