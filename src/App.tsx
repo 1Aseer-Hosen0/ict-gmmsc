@@ -9,6 +9,7 @@ import Events from "./pages/Events";
 import EventDetails from "./pages/EventDetails";
 import Gallery from "./pages/Gallery";
 import Blog from "./pages/Blog";
+import BlogDetails from "./pages/BlogDetails";
 import Contact from "./pages/Contact";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/events/:id" element={<EventDetails />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blogs/:id" element={<BlogDetails />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Auth />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

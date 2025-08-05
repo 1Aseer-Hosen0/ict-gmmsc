@@ -2,16 +2,7 @@ import { motion } from "framer-motion";
 import BlogCard from "./BlogCard";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-interface Blog {
-  id: number;
-  title: string;
-  snippet: string;
-  author: string;
-  date: string;
-  coverImage: string;
-  tags: string[];
-}
+import { Blog } from "@/hooks/useBlogs";
 
 interface BlogGridProps {
   blogs: Blog[];

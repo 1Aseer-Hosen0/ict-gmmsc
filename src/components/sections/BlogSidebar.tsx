@@ -2,25 +2,22 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, TrendingUp } from "lucide-react";
 import { useState } from "react";
-
-interface Blog {
-  id: number;
-  title: string;
-  snippet: string;
-  author: string;
-  date: string;
-  coverImage: string;
-  tags: string[];
-}
+import { useNavigate } from "react-router-dom";
+import { Blog } from "@/hooks/useBlogs";
 
 interface BlogSidebarProps {
   blogs: Blog[];
+  allTags: string[];
+  activeTag: string | null;
+  onTagClick: (tag: string) => void;
 }
 
-const BlogSidebar = ({ blogs }: BlogSidebarProps) => {
-  const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
+const BlogSidebar = ({ blogs, allTags, activeTag, onTagClick }: BlogSidebarProps) => {
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
+  const navigate = useNavigate();
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'No date';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
       month: 'short', 
@@ -28,8 +25,12 @@ const BlogSidebar = ({ blogs }: BlogSidebarProps) => {
     });
   };
 
-  const handleImageError = (blogId: number) => {
+  const handleImageError = (blogId: string) => {
     setImageErrors(prev => ({ ...prev, [blogId]: true }));
+  };
+
+  const handleBlogClick = (blogId: string) => {
+    navigate(`/blogs/${blogId}`);
   };
 
   return (
@@ -56,12 +57,13 @@ const BlogSidebar = ({ blogs }: BlogSidebarProps) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * index }}
                 whileHover={{ x: 5 }}
+                onClick={() => handleBlogClick(blog.id)}
               >
                 {/* Thumbnail */}
                 <div className="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-gradient-to-br from-club-blue/20 to-primary/10">
-                  {!imageErrors[blog.id] ? (
+                  {!imageErrors[blog.id] && blog.image_url ? (
                     <img
-                      src={blog.coverImage}
+                      src={blog.image_url}
                       alt={blog.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       onError={() => handleImageError(blog.id)}
@@ -81,7 +83,7 @@ const BlogSidebar = ({ blogs }: BlogSidebarProps) => {
                   </h4>
                   <div className="flex items-center mt-2 text-xs text-muted-foreground">
                     <Calendar className="h-3 w-3 mr-1" />
-                    <span>{formatDate(blog.date)}</span>
+                    <span>{formatDate(blog.publish_date)}</span>
                   </div>
                 </div>
               </motion.div>
@@ -102,10 +104,15 @@ const BlogSidebar = ({ blogs }: BlogSidebarProps) => {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {['React', 'JavaScript', 'Python', 'AI', 'Web Dev', 'Mobile', 'Cloud', 'Security'].map((tag) => (
+              {allTags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 py-1 bg-muted text-muted-foreground text-xs rounded-full hover:bg-primary/20 hover:text-primary transition-colors cursor-pointer"
+                  className={`px-3 py-1 text-xs rounded-full transition-colors cursor-pointer ${
+                    activeTag === tag 
+                      ? 'bg-primary text-primary-foreground' 
+                      : 'bg-muted text-muted-foreground hover:bg-primary/20 hover:text-primary'
+                  }`}
+                  onClick={() => onTagClick(tag)}
                 >
                   {tag}
                 </span>
