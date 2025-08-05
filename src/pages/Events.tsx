@@ -1,13 +1,50 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import EventsGrid from "@/components/sections/EventsGrid";
 import DynamicBar from "@/components/sections/DynamicBar";
 import HeroSection from "@/components/sections/Intro";
 import { CalendarCheck, Image, Users } from "lucide-react";
+import { useEvents } from "@/hooks/useEvents";
 
 const Events = () => {
   const [activeCategory, setActiveCategory] = useState("National");
+  const { events } = useEvents();
+
+  // Calculate dynamic counts for each category
+  const categoryItems = useMemo(() => {
+    const categoryCounts = events.reduce((acc, event) => {
+      acc[event.category] = (acc[event.category] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return [
+      {
+        id: "National",
+        label: "National",
+        count: categoryCounts["National"] || 0,
+        tooltip: "Our National Events",
+      },
+      {
+        id: "Intra",
+        label: "Intra",
+        count: categoryCounts["Intra"] || 0,
+        tooltip: "Our Intra Events",
+      },
+      {
+        id: "Workshop",
+        label: "Workshops",
+        count: categoryCounts["Workshop"] || 0,
+        tooltip: "Our Workshops",
+      },
+      {
+        id: "Others",
+        label: "Others",
+        count: categoryCounts["Others"] || 0,
+        tooltip: "See Other Events",
+      },
+    ];
+  }, [events]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -42,32 +79,7 @@ const Events = () => {
         <DynamicBar
           title="Our Events"
           description="Explore our events by category"
-          items={[
-            {
-              id: "National",
-              label: "National",
-              count: 3,
-              tooltip: "Our National Events",
-            },
-            {
-              id: "Intra",
-              label: "Intra",
-              count: 2,
-              tooltip: "Our Intra Events",
-            },
-            {
-              id: "Workshops",
-              label: "Workshops",
-              count: 6,
-              tooltip: "Our Workshops",
-            },
-            {
-              id: "Others",
-              label: "Others",
-              count: 4,
-              tooltip: "See Other Events",
-            },
-          ]}
+          items={categoryItems}
           activeItem={activeCategory}
           onItemChange={setActiveCategory}
         />
