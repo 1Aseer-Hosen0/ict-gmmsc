@@ -48,7 +48,7 @@ const BlogDetails = () => {
     };
 
     fetchBlogData();
-  }, [id, getBlogById, getRandomBlogs]);
+  }, [id]);
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'No date';
