@@ -5,9 +5,20 @@ import { useState } from "react";
 import DynamicBar from "@/components/sections/DynamicBar";
 import HeroSection from "@/components/sections/Intro";
 import { Calendar, Image, Users } from "lucide-react";
+import { useGallery } from "@/hooks/useGallery";
 
 const Gallery = () => {
   const [activeFilter, setActiveFilter] = useState("All");
+  const { getUniqueCategories, getCategoryCount } = useGallery();
+  
+  const handleFilterChange = (filter: string) => {
+    // If clicking the same filter, reset to "All"
+    if (activeFilter === filter && filter !== "All") {
+      setActiveFilter("All");
+    } else {
+      setActiveFilter(filter);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -40,23 +51,16 @@ const Gallery = () => {
         title="Browse Our Collection"
         description="Filter through our diverse collection of images from various events and activities"
         items={[
-          { id: "All", label: "All", count: 150, tooltip: "Show all images" },
-          {
-            id: "Events",
-            label: "Events",
-            count: 85,
-            tooltip: "View event galleries",
-          },
-          {
-            id: "Workshops",
-            label: "Workshops",
-            count: 45,
-            tooltip: "View workshop galleries",
-          },
-          { id: "Others", label: "Others", count: 20, tooltip: "Other images" },
+          { id: "All", label: "All", count: getCategoryCount("All"), tooltip: "Show all images" },
+          ...getUniqueCategories().map(category => ({
+            id: category,
+            label: category,
+            count: getCategoryCount(category),
+            tooltip: `View ${category.toLowerCase()} galleries`,
+          })),
         ]}
         activeItem={activeFilter}
-        onItemChange={setActiveFilter}
+        onItemChange={handleFilterChange}
       />
 
       {/* Gallery Grid */}

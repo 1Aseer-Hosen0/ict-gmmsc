@@ -28,11 +28,15 @@ const GalleryImage = ({ src, title, description, category }: GalleryImageProps) 
 
   return (
     <motion.div
-      className="relative group cursor-pointer overflow-hidden rounded-2xl bg-card border border-border/50 shadow-lg"
+      className="relative group cursor-pointer overflow-hidden rounded-2xl bg-card border border-border/50 shadow-lg backdrop-blur-sm"
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      whileHover={{ y: -8 }}
+      whileHover={{ y: -8, scale: 1.05 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
+      style={{
+        backdropFilter: isHovered ? 'blur(2px)' : 'none',
+        zIndex: isHovered ? 10 : 1
+      }}
     >
       {/* Image Container */}
       <div className="relative overflow-hidden">
