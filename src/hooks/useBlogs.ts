@@ -50,9 +50,10 @@ export const useBlogs = () => {
         .select('*')
         .eq('id', id)
         .eq('published', true)
-        .single();
+        .maybeSingle();
 
       if (supabaseError) {
+        console.error('Supabase error fetching blog by ID:', supabaseError);
         throw supabaseError;
       }
 
