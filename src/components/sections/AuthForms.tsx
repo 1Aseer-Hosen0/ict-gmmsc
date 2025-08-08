@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +9,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, Mail, Lock, User, Phone, Hash, BookOpen } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import bcryptjs from "bcryptjs";
 
 interface FormData {
   email: string;
@@ -41,6 +45,8 @@ const AuthForms = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -108,21 +114,122 @@ const AuthForms = () => {
     }
   };
 
-  const handleSubmit = async (isLogin: boolean) => {
-    if (!validateForm(isLogin)) return;
+  const handleLogin = async () => {
+    if (!validateForm(true)) {
+      return;
+    }
 
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      // Check if user exists with email
+      const { data: existingUser, error } = await supabase
+        .from('club_members')
+        .select('*')
+        .eq('email', formData.email)
+        .maybeSingle();
+
+      if (error) {
+        throw new Error('Database error');
+      }
+
+      if (!existingUser) {
+        setErrors({ email: "No account found with this email" });
+        return;
+      }
+
+      // Verify password
+      const isValidPassword = await bcryptjs.compare(formData.password, existingUser.password_hash);
+      
+      if (!isValidPassword) {
+        setErrors({ password: "Invalid password" });
+        return;
+      }
+
+      // Login successful
+      const { password_hash, ...userWithoutPassword } = existingUser;
+      login(userWithoutPassword);
+      
       toast({
-        title: isLogin ? "Login Successful" : "Registration Successful",
-        description: isLogin 
-          ? "Welcome back to ICT Club!" 
-          : "Welcome to ICT Club! Please proceed with payment.",
+        title: "Login Successful!",
+        description: `Welcome back, ${existingUser.full_name}!`,
       });
+      
+      navigate('/');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-    }, 2000);
+    }
+  };
+
+  const handleSignup = async () => {
+    if (!validateForm(false)) {
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      // Check if email already exists
+      const { data: existingUser } = await supabase
+        .from('club_members')
+        .select('email')
+        .eq('email', formData.email)
+        .maybeSingle();
+
+      if (existingUser) {
+        setErrors({ email: "An account with this email already exists" });
+        return;
+      }
+
+      // Hash password
+      const saltRounds = 10;
+      const hashedPassword = await bcryptjs.hash(formData.password, saltRounds);
+
+      // Insert new user
+      const { data: newUser, error } = await supabase
+        .from('club_members')
+        .insert([{
+          full_name: formData.fullName,
+          email: formData.email,
+          class: formData.class,
+          section: formData.section,
+          student_id: formData.id,
+          phone: formData.phone || null,
+          fb_link: formData.facebook || null,
+          password_hash: hashedPassword,
+        }])
+        .select()
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      // Auto-login after successful signup
+      const { password_hash, ...userWithoutPassword } = newUser;
+      login(userWithoutPassword);
+      
+      toast({
+        title: "You are welcome to the GIC. Thank you " + formData.fullName + ".",
+        description: "Your account has been created successfully!",
+      });
+      
+      navigate('/');
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -201,7 +308,7 @@ const AuthForms = () => {
                 </div>
 
                 <Button 
-                  onClick={() => handleSubmit(true)}
+                  onClick={handleLogin}
                   disabled={isLoading}
                   className="w-full bg-primary hover:bg-primary/90"
                 >
@@ -423,11 +530,11 @@ const AuthForms = () => {
                 </div>
 
                 <Button 
-                  onClick={() => handleSubmit(false)}
+                  onClick={handleSignup}
                   disabled={isLoading}
                   className="w-full bg-primary hover:bg-primary/90"
                 >
-                  {isLoading ? "Submitting..." : "Submit"}
+                  {isLoading ? "Creating Account..." : "Submit"}
                 </Button>
               </CardContent>
             </motion.div>

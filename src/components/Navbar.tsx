@@ -1,7 +1,16 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { Button } from '@/components/ui/button'; // Assuming you have this component
-import { Link } from 'react-router-dom'; 
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { User, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import logo from '@/assets/logo.png';
 
 // A simple hamburger icon component for clarity
@@ -43,6 +52,9 @@ const Navbar = () => {
 
   // State for mobile menu
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Auth state
+  const { user, isAuthenticated, logout } = useAuth();
 
   // Effect to handle scroll events
   useEffect(() => {
@@ -131,18 +143,42 @@ const Navbar = () => {
               ))}
             </div>
 
-            {/* Desktop Login Button */}
+            {/* Desktop Auth Section */}
             <div className="hidden md:block">
-                <Link to="/login">
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button 
-                            variant="outline" 
-                            className="bg-transparent border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition-all duration-300"
-                        >
-                            Login
-                        </Button>
-                    </motion.div>
-                </Link>
+                {isAuthenticated ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-10 w-10 rounded-full p-0">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage src="" alt={user?.full_name} />
+                          <AvatarFallback>
+                            <User className="h-4 w-4" />
+                          </AvatarFallback>
+                        </Avatar>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem disabled>
+                        {user?.full_name}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={logout}>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <Link to="/login">
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                          <Button 
+                              variant="outline" 
+                              className="bg-transparent border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition-all duration-300"
+                          >
+                              Login
+                          </Button>
+                      </motion.div>
+                  </Link>
+                )}
             </div>
 
             {/* Mobile Menu Button (Hamburger) */}
@@ -169,15 +205,43 @@ const Navbar = () => {
                   key={`mobile-${item.title}`}
                   to={item.href}
                   className="text-gray-300 hover:text-blue-500 text-2xl font-medium transition-colors duration-300"
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   {item.title}
                 </Link>
               ))}
-              <Link to="/login">
-                <Button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 text-lg rounded-lg transition-colors duration-300">
-                  Login
-                </Button>
-              </Link>
+              
+              <div className="pt-4 border-t border-gray-700 w-2/3 text-center">
+                {isAuthenticated ? (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-center gap-3 p-3 bg-gray-800 rounded-md">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src="" alt={user?.full_name} />
+                        <AvatarFallback>
+                          <User className="h-4 w-4" />
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-sm font-medium text-white">{user?.full_name}</span>
+                    </div>
+                    <Button 
+                      onClick={() => {
+                        logout();
+                        setIsMenuOpen(false);
+                      }} 
+                      className="w-full bg-red-500 hover:bg-red-600 text-white"
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Logout
+                    </Button>
+                  </div>
+                ) : (
+                  <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                    <Button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 text-lg rounded-lg transition-colors duration-300">
+                      Login
+                    </Button>
+                  </Link>
+                )}
+              </div>
             </div>
           </motion.div>
         )}
