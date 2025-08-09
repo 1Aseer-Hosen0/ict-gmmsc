@@ -14,6 +14,8 @@ import BlogDetails from "./pages/BlogDetails";
 import Contact from "./pages/Contact";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
+import Quests from "./pages/Quests";
 import ScrollToTop from "./components/sections/ScrollToTop";
 
 const queryClient = new QueryClient();
@@ -38,6 +40,8 @@ const App = () => (
             <Route path="/blogs/:id" element={<BlogDetails />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Auth />} />
+            <Route path="/profile/:username" element={<Profile />} />
+            <Route path="/quests" element={<Quests />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

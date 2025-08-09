@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { User, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -55,6 +55,8 @@ const Navbar = () => {
   
   // Auth state
   const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+  const usernameSlug = encodeURIComponent((user?.full_name ?? '').trim().replace(/\s+/g, '-'));
 
   // Effect to handle scroll events
   useEffect(() => {
@@ -141,6 +143,15 @@ const Navbar = () => {
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
                 </motion.a>
               ))}
+              {isAuthenticated && (
+                <Link
+                  to="/quests"
+                  className="text-gray-300 hover:text-blue-500 transition-colors duration-300 font-medium relative group"
+                >
+                  Quests
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+                </Link>
+              )}
             </div>
 
             {/* Desktop Auth Section */}
@@ -157,14 +168,24 @@ const Navbar = () => {
                         </Avatar>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem disabled>
-                        {user?.full_name}
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={logout}>
-                        <LogOut className="mr-2 h-4 w-4" />
-                        Logout
-                      </DropdownMenuItem>
+                    <DropdownMenuContent align="end" className="w-56">
+                      <motion.div
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.18, ease: 'easeOut' }}
+                      >
+                        <DropdownMenuItem disabled>
+                          {user?.full_name}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate(`/profile/${usernameSlug}`)}>
+                          Profile
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={logout}>
+                          <LogOut className="mr-2 h-4 w-4" />
+                          Logout
+                        </DropdownMenuItem>
+                      </motion.div>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 ) : (
@@ -210,6 +231,16 @@ const Navbar = () => {
                   {item.title}
                 </Link>
               ))}
+              {isAuthenticated && (
+                <Link
+                  key="mobile-quests"
+                  to="/quests"
+                  className="text-gray-300 hover:text-blue-500 text-2xl font-medium transition-colors duration-300"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Quests
+                </Link>
+              )}
               
               <div className="pt-4 border-t border-gray-700 w-2/3 text-center">
                 {isAuthenticated ? (
@@ -223,6 +254,11 @@ const Navbar = () => {
                       </Avatar>
                       <span className="text-sm font-medium text-white">{user?.full_name}</span>
                     </div>
+                    <Link to={`/profile/${usernameSlug}`} onClick={() => setIsMenuOpen(false)}>
+                      <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white">
+                        Profile
+                      </Button>
+                    </Link>
                     <Button 
                       onClick={() => {
                         logout();
