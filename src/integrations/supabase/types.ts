@@ -88,36 +88,48 @@ export type Database = {
       }
       club_members: {
         Row: {
+          avatar_url: string | null
+          bio: string | null
           class: string
           created_at: string
+          date_of_birth: string | null
           email: string
           fb_link: string | null
           full_name: string
           id: string
+          location: string | null
           password_hash: string
           phone: string | null
           section: string
           student_id: string
         }
         Insert: {
+          avatar_url?: string | null
+          bio?: string | null
           class: string
           created_at?: string
+          date_of_birth?: string | null
           email: string
           fb_link?: string | null
           full_name: string
           id?: string
+          location?: string | null
           password_hash?: string
           phone?: string | null
           section: string
           student_id: string
         }
         Update: {
+          avatar_url?: string | null
+          bio?: string | null
           class?: string
           created_at?: string
+          date_of_birth?: string | null
           email?: string
           fb_link?: string | null
           full_name?: string
           id?: string
+          location?: string | null
           password_hash?: string
           phone?: string | null
           section?: string
