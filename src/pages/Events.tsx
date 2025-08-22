@@ -6,8 +6,11 @@ import DynamicBar from "@/components/sections/DynamicBar";
 import HeroSection from "@/components/sections/Intro";
 import { CalendarCheck, Image, Users } from "lucide-react";
 import { useEvents } from "@/hooks/useEvents";
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 const Events = () => {
+  useDocumentTitle('Events | GIC');
+  
   const [activeCategory, setActiveCategory] = useState("National");
   const { events } = useEvents();
 

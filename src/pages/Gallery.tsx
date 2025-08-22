@@ -6,8 +6,11 @@ import DynamicBar from "@/components/sections/DynamicBar";
 import HeroSection from "@/components/sections/Intro";
 import { Calendar, Image, Users } from "lucide-react";
 import { useGallery } from "@/hooks/useGallery";
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 const Gallery = () => {
+  useDocumentTitle('Gallery | GIC');
+  
   const [activeFilter, setActiveFilter] = useState("All");
   const { getUniqueCategories, getCategoryCount } = useGallery();
   

@@ -7,8 +7,11 @@ import BlogFAQ from "@/components/sections/BlogFAQ";
 import HeroSection from "@/components/sections/Intro";
 import { SquarePen, Users, BookOpenText } from "lucide-react";
 import { useBlogs } from "@/hooks/useBlogs";
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 const Blog = () => {
+  useDocumentTitle('Blog | GIC');
+  
   const faqRef = useRef<HTMLDivElement | null>(null);
   const { blogs, loading, error } = useBlogs();
   const [currentPage, setCurrentPage] = useState(1);

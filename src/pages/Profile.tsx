@@ -14,6 +14,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { User, Camera, Lock } from 'lucide-react';
+import PasswordResetModal from '@/components/PasswordResetModal';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useProfile } from '@/contexts/ProfileContext';
 import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } from '@/config/cloudinary';
 
 interface MemberProfile {
@@ -62,6 +65,7 @@ const Profile = () => {
   const { username } = useParams();
   const navigate = useNavigate();
   const { user, isAuthenticated, loading } = useAuth();
+  const { updateAvatarUrl } = useProfile();
   const { toast } = useToast();
 
   const [profile, setProfile] = useState<MemberProfile | null>(null);
@@ -73,6 +77,7 @@ const Profile = () => {
   const [dob, setDob] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
   const [saving, setSaving] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   const slug = useMemo(
     () => encodeURIComponent((profile?.full_name ?? user?.full_name ?? '').trim().replace(/\s+/g, '-')),
@@ -122,6 +127,9 @@ const Profile = () => {
     }
   }, [profile?.full_name, user?.full_name, slug, username, navigate]);
 
+  // Set dynamic document title
+  useDocumentTitle(`${profile?.full_name || user?.full_name || 'Profile'} | GIC`);
+
   const openUploadWidget = useCallback(() => {
     if (!window.cloudinary) {
       toast({ title: 'Upload not ready', description: 'Cloudinary widget not loaded yet.', variant: 'destructive' });
@@ -159,6 +167,7 @@ const Profile = () => {
             toast({ title: 'Failed to save photo', description: 'Please try again.', variant: 'destructive' });
           } else {
             setProfile((prev) => (prev ? { ...prev, avatar_url: url } : prev));
+            updateAvatarUrl(url); // Update context to sync across app
             toast({ title: 'Profile photo updated', description: 'Your avatar was saved successfully.' });
           }
         }
@@ -255,8 +264,12 @@ const Profile = () => {
                     <Input value={info.phone} disabled />
                   </div>
                 )}
-                <Button variant="outline" className="w-full" disabled>
-                  <Lock className="h-4 w-4 mr-2" /> Change Password (soon)
+                <Button 
+                  variant="outline" 
+                  className="w-full" 
+                  onClick={() => setShowPasswordModal(true)}
+                >
+                  <Lock className="h-4 w-4 mr-2" /> Change Password
                 </Button>
               </CardContent>
             </Card>
@@ -324,6 +337,14 @@ const Profile = () => {
       </div>
 
       <Footer />
+
+      {/* Password Reset Modal */}
+      <PasswordResetModal
+        open={showPasswordModal}
+        onOpenChange={setShowPasswordModal}
+        userEmail={info.email}
+        userId={info.id}
+      />
     </div>
   );
 };

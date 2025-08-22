@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 const setSEO = (title: string, description: string) => {
   document.title = title;
@@ -25,12 +28,10 @@ const setSEO = (title: string, description: string) => {
 };
 
 const Quests = () => {
+  useDocumentTitle('Quests | GIC');
+  
   const { isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setSEO('Quests | GIC', 'Explore quests and challenges at GIC.');
-  }, []);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -41,14 +42,18 @@ const Quests = () => {
   if (!isAuthenticated) return null;
 
   return (
-    <main className="container mx-auto px-6 py-24">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold">Quests</h1>
-      </header>
-      <section className="text-muted-foreground">
-        Coming soon.
-      </section>
-    </main>
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <main className="container mx-auto px-6 py-24">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold">Quests</h1>
+        </header>
+        <section className="text-muted-foreground">
+          Coming soon.
+        </section>
+      </main>
+      <Footer />
+    </div>
   );
 };
 

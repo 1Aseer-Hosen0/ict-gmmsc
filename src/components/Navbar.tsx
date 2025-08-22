@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useProfile } from "@/contexts/ProfileContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,6 +56,7 @@ const Navbar = () => {
   
   // Auth state
   const { user, isAuthenticated, logout } = useAuth();
+  const { avatarUrl } = useProfile();
   const navigate = useNavigate();
   const usernameSlug = encodeURIComponent((user?.full_name ?? '').trim().replace(/\s+/g, '-'));
 
@@ -161,7 +163,7 @@ const Navbar = () => {
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="h-10 w-10 rounded-full p-0">
                         <Avatar className="h-10 w-10">
-                          <AvatarImage src="" alt={user?.full_name} />
+                          <AvatarImage src={avatarUrl || ""} alt={user?.full_name} />
                           <AvatarFallback>
                             <User className="h-4 w-4" />
                           </AvatarFallback>
@@ -247,7 +249,7 @@ const Navbar = () => {
                   <div className="space-y-4">
                     <div className="flex items-center justify-center gap-3 p-3 bg-gray-800 rounded-md">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src="" alt={user?.full_name} />
+                        <AvatarImage src={avatarUrl || ""} alt={user?.full_name} />
                         <AvatarFallback>
                           <User className="h-4 w-4" />
                         </AvatarFallback>

@@ -7,8 +7,11 @@ import Committee from '@/components/sections/Committee';
 import GalleryPreview from '@/components/sections/GalleryPreview';
 import PanelBar from '@/components/sections/PanelBar';
 import { Calendar, Users } from 'lucide-react';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 const About = () => {
+  useDocumentTitle('About | GIC');
+  
   const [activeSession, setActiveSession] = useState("2023-24");
 
   const sessions = [

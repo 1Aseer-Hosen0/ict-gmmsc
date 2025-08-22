@@ -9,8 +9,11 @@ import FAQ from '@/components/sections/FAQ';
 import Footer from '@/components/Footer';
 import { Image, Users, Home } from 'lucide-react';
 import HomePic from "@/assets/home.jpg";
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 const Index = () => {
+  useDocumentTitle('Home | GIC');
+  
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
