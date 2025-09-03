@@ -235,12 +235,102 @@ export type Database = {
           },
         ]
       }
+      quiz_attempts: {
+        Row: {
+          answers: Json
+          completed_at: string
+          correct_answers: number
+          created_at: string
+          id: string
+          score: number
+          section: string
+          total_questions: number
+          user_id: string
+          week_id: number
+          wrong_answers: number
+        }
+        Insert: {
+          answers?: Json
+          completed_at?: string
+          correct_answers?: number
+          created_at?: string
+          id?: string
+          score?: number
+          section: string
+          total_questions?: number
+          user_id: string
+          week_id: number
+          wrong_answers?: number
+        }
+        Update: {
+          answers?: Json
+          completed_at?: string
+          correct_answers?: number
+          created_at?: string
+          id?: string
+          score?: number
+          section?: string
+          total_questions?: number
+          user_id?: string
+          week_id?: number
+          wrong_answers?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_attempts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "club_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_questions: {
+        Row: {
+          correct_answer: string
+          created_at: string
+          id: string
+          question: string
+          section: string
+          week_id: number
+        }
+        Insert: {
+          correct_answer: string
+          created_at?: string
+          id?: string
+          question: string
+          section: string
+          week_id: number
+        }
+        Update: {
+          correct_answer?: string
+          created_at?: string
+          id?: string
+          question?: string
+          section?: string
+          week_id?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_current_week_id: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      get_leaderboard: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          avatar_url: string
+          full_name: string
+          rank_position: number
+          total_score: number
+          user_id: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
