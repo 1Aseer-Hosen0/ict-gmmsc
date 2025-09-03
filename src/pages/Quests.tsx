@@ -1,37 +1,18 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-
-const setSEO = (title: string, description: string) => {
-  document.title = title;
-  const metaDesc = document.querySelector('meta[name="description"]');
-  if (metaDesc) {
-    metaDesc.setAttribute('content', description);
-  } else {
-    const m = document.createElement('meta');
-    m.name = 'description';
-    m.content = description;
-    document.head.appendChild(m);
-  }
-  const canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
-  if (canonical) {
-    canonical.href = window.location.href;
-  } else {
-    const link = document.createElement('link');
-    link.rel = 'canonical';
-    link.href = window.location.href;
-    document.head.appendChild(link);
-  }
-};
+import QuizInterface from '@/components/quiz/QuizInterface';
+import Leaderboard from '@/components/quiz/Leaderboard';
 
 const Quests = () => {
   useDocumentTitle('Quests | GIC');
   
   const { isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<'quiz' | 'leaderboard'>('quiz');
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -39,18 +20,64 @@ const Quests = () => {
     }
   }, [isAuthenticated, loading, navigate]);
 
+  useEffect(() => {
+    // SEO setup
+    document.title = 'Quests | GIC';
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', 'Test your knowledge with weekly quiz challenges and compete on the leaderboard. Science, General Knowledge, and IQ categories.');
+    } else {
+      const m = document.createElement('meta');
+      m.name = 'description';
+      m.content = 'Test your knowledge with weekly quiz challenges and compete on the leaderboard. Science, General Knowledge, and IQ categories.';
+      document.head.appendChild(m);
+    }
+  }, []);
+
   if (!isAuthenticated) return null;
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <main className="container mx-auto px-6 py-24">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold">Quests</h1>
+        <header className="text-center mb-8">
+          <h1 className="text-4xl font-bold mb-4">Quest Zone</h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Challenge yourself with weekly quizzes and climb the leaderboard. 
+            Test your knowledge across Science, General Knowledge, and IQ categories.
+          </p>
         </header>
-        <section className="text-muted-foreground">
-          Coming soon.
-        </section>
+
+        {/* Tab Navigation */}
+        <div className="flex justify-center mb-8">
+          <div className="bg-muted p-1 rounded-lg">
+            <button
+              onClick={() => setActiveTab('quiz')}
+              className={`px-6 py-2 rounded-md font-medium transition-colors ${
+                activeTab === 'quiz'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Quiz
+            </button>
+            <button
+              onClick={() => setActiveTab('leaderboard')}
+              className={`px-6 py-2 rounded-md font-medium transition-colors ${
+                activeTab === 'leaderboard'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Leaderboard
+            </button>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="fade-in">
+          {activeTab === 'quiz' ? <QuizInterface /> : <Leaderboard />}
+        </div>
       </main>
       <Footer />
     </div>
