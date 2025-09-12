@@ -6,7 +6,7 @@ import { Trophy, Medal, Award, User } from 'lucide-react';
 import { useLeaderboard } from '@/hooks/useLeaderboard';
 
 const Leaderboard = () => {
-  const { loading, leaderboard, userRank } = useLeaderboard();
+  const { loading, leaderboard, userRank, previousMonthTop3 } = useLeaderboard();
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
@@ -105,7 +105,7 @@ const Leaderboard = () => {
       </Card>
 
       {/* Current User Rank */}
-      {userRank && Number(userRank.rank_position) > 5 && (
+      {userRank && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -137,6 +137,48 @@ const Leaderboard = () => {
 
               <Badge variant="outline">Your Position</Badge>
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Previous Month Top 3 */}
+      {previousMonthTop3.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Trophy className="h-5 w-5 text-amber-500" />
+              Last Month's Champions
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {previousMonthTop3.map((entry) => (
+              <div
+                key={entry.user_id}
+                className="flex items-center gap-4 p-3 bg-amber-50 rounded-lg border border-amber-200"
+              >
+                <div className="flex-shrink-0">
+                  {getRankIcon(Number(entry.rank_position))}
+                </div>
+
+                <Avatar className="h-10 w-10">
+                  <AvatarImage src={entry.avatar_url || undefined} />
+                  <AvatarFallback>
+                    {entry.full_name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+
+                <div className="flex-1">
+                  <h4 className="font-medium">{entry.full_name}</h4>
+                  <p className="text-sm text-muted-foreground">
+                    {Number(entry.total_score).toFixed(2)} points
+                  </p>
+                </div>
+
+                <Badge variant="outline" className="text-amber-700 border-amber-300">
+                  Last Month
+                </Badge>
+              </div>
+            ))}
           </CardContent>
         </Card>
       )}

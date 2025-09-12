@@ -11,7 +11,12 @@ interface QuizResultsProps {
     correctAnswers: number;
     wrongAnswers: number;
     totalQuestions: number;
-    results: Array<{ isCorrect: boolean; userAnswer: string }>;
+    answers: Array<{ 
+      question_id: string;
+      user_answer: string; 
+      correct_answer: string;
+      is_correct: boolean;
+    }>;
   };
   questions: Question[];
   onBackToSections: () => void;
@@ -94,8 +99,8 @@ const QuizResults: React.FC<QuizResultsProps> = ({ results, questions, onBackToS
         </CardHeader>
         <CardContent className="space-y-4">
           {questions.map((question, index) => {
-            const result = results.results[index];
-            const isCorrect = result?.isCorrect;
+            const result = results.answers[index];
+            const isCorrect = result?.is_correct;
             
             return (
               <div key={question.id} className="border rounded-lg p-4">
@@ -118,20 +123,27 @@ const QuizResults: React.FC<QuizResultsProps> = ({ results, questions, onBackToS
                     
                     <p className="text-sm">{question.question}</p>
                     
-                    <div className="grid md:grid-cols-2 gap-2 text-sm">
-                      <div>
-                        <span className="font-medium text-green-600">Correct Answer:</span>
-                        <p className="bg-green-50 p-2 rounded mt-1">{question.answer}</p>
-                      </div>
-                      
+                    <div className="space-y-2 text-sm">
                       <div>
                         <span className="font-medium text-muted-foreground">Your Answer:</span>
                         <p className={`p-2 rounded mt-1 ${
                           isCorrect ? 'bg-green-50' : 'bg-red-50'
                         }`}>
-                          {result?.userAnswer || 'No answer provided'}
+                          {result?.user_answer || 'No answer provided'}
                         </p>
                       </div>
+                      
+                      {isCorrect && (
+                        <div>
+                          <span className="font-medium text-green-600">✓ Correct!</span>
+                        </div>
+                      )}
+                      
+                      {!isCorrect && (
+                        <div>
+                          <span className="font-medium text-red-600">✗ Incorrect</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

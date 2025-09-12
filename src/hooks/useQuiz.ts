@@ -18,6 +18,7 @@ export interface QuizAttempt {
   correct_answers: number;
   wrong_answers: number;
   completed_at: string;
+  answers: any;
 }
 
 export const useQuiz = () => {
@@ -29,23 +30,41 @@ export const useQuiz = () => {
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes in seconds
   const [quizStarted, setQuizStarted] = useState(false);
-  const [quizCompleted, setQuizCompleted] = useState(false);
-  const [quizResults, setQuizResults] = useState<any>(null);
+  const [quizCompleted, setQuizCompletedState] = useState(false);
+  const [quizResults, setQuizResultsState] = useState<any>(null);
   const [selectedSection, setSelectedSection] = useState<string>('');
   const [weeklyAttempts, setWeeklyAttempts] = useState<Record<string, QuizAttempt>>({});
 
-  // Check if user has attempted quiz for each category this month
+  // Get current week number within the month
+  const getCurrentWeekInMonth = () => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    const currentDate = now.getDate();
+    
+    // Calculate week number within the month
+    const weekNumber = Math.ceil(currentDate / 7);
+    
+    return { weekNumber, month: currentMonth, year: currentYear };
+  };
+
+  // Check if user has attempted quiz for each category this week
   const checkWeeklyAttempts = async () => {
     if (!user) return;
 
     try {
-      // Get attempts for current month
-      const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+      const { weekNumber, month, year } = getCurrentWeekInMonth();
+      
+      // Get start and end of current week within the month
+      const startOfWeek = new Date(year, month, (weekNumber - 1) * 7 + 1);
+      const endOfWeek = new Date(year, month, weekNumber * 7, 23, 59, 59);
+      
       const { data, error } = await supabase
         .from('quiz_attempts')
         .select('*')
         .eq('user_id', user.id)
-        .gte('created_at', startOfMonth.toISOString());
+        .gte('created_at', startOfWeek.toISOString())
+        .lte('created_at', endOfWeek.toISOString());
 
       if (error) throw error;
 
@@ -55,7 +74,7 @@ export const useQuiz = () => {
       });
       setWeeklyAttempts(attempts);
     } catch (error) {
-      console.error('Error checking monthly attempts:', error);
+      console.error('Error checking weekly attempts:', error);
     }
   };
 
@@ -87,8 +106,8 @@ export const useQuiz = () => {
       setQuestions(selectedQuestions);
       setUserAnswers(new Array(selectedQuestions.length).fill(''));
       setCurrentQuestionIndex(0);
-      setQuizCompleted(false);
-      setQuizResults(null);
+      setQuizCompletedState(false);
+      setQuizResultsState(null);
     } catch (error) {
       console.error('Error loading questions:', error);
       toast({
@@ -146,7 +165,7 @@ export const useQuiz = () => {
     if (!user || !questions.length) return;
 
     setLoading(true);
-    setQuizCompleted(true);
+    setQuizCompletedState(true);
 
     try {
       // Validate answers with simple string comparison
@@ -159,19 +178,41 @@ export const useQuiz = () => {
         const userAnswer = userAnswers[i].trim();
 
         if (userAnswer === '') {
-          // Empty answer counts as wrong
+          // Empty answer - don't count as wrong if database answer is also empty
+          if (!question.answer || question.answer.trim() === '') {
+            validatedAnswers.push({
+              question_id: question.id,
+              user_answer: userAnswer,
+              correct_answer: question.answer,
+              is_correct: true
+            });
+            correctCount++;
+          } else {
+            validatedAnswers.push({
+              question_id: question.id,
+              user_answer: userAnswer,
+              correct_answer: question.answer,
+              is_correct: false
+            });
+            wrongCount++;
+          }
+          continue;
+        }
+
+        // Skip questions with empty answers in database
+        if (!question.answer || question.answer.trim() === '') {
           validatedAnswers.push({
             question_id: question.id,
             user_answer: userAnswer,
             correct_answer: question.answer,
-            is_correct: false
+            is_correct: true
           });
-          wrongCount++;
+          correctCount++;
           continue;
         }
 
         // Simple string comparison (case-insensitive)
-        const isCorrect = userAnswer.toLowerCase() === question.answer.toLowerCase();
+        const isCorrect = userAnswer.toLowerCase().trim() === question.answer.toLowerCase().trim();
 
         validatedAnswers.push({
           question_id: question.id,
@@ -201,7 +242,7 @@ export const useQuiz = () => {
 
       if (insertError) throw insertError;
 
-      setQuizResults({
+      setQuizResultsState({
         score: score,
         correctAnswers: correctCount,
         wrongAnswers: wrongCount,
@@ -209,7 +250,7 @@ export const useQuiz = () => {
         answers: validatedAnswers
       });
 
-      // Refresh monthly attempts
+      // Refresh weekly attempts
       await checkWeeklyAttempts();
 
       toast({
@@ -257,6 +298,15 @@ export const useQuiz = () => {
     checkWeeklyAttempts();
   }, [user]);
 
+  // Helper functions to expose state setters for "See Answers" feature
+  const setQuizResults = (results: any) => {
+    setQuizResultsState(results);
+  };
+
+  const setQuizCompletedHelper = (completed: boolean) => {
+    setQuizCompletedState(completed);
+  };
+
   return {
     loading,
     questions,
@@ -268,6 +318,7 @@ export const useQuiz = () => {
     quizResults,
     weeklyAttempts,
     selectedSection,
+    user,
     loadQuestions,
     startQuiz,
     submitQuiz,
@@ -275,6 +326,8 @@ export const useQuiz = () => {
     nextQuestion,
     previousQuestion,
     goToQuestion,
-    checkWeeklyAttempts
+    checkWeeklyAttempts,
+    setQuizResults,
+    setQuizCompleted: setQuizCompletedHelper
   };
 };

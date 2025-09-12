@@ -4,12 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Timer, Brain, Zap, BookOpen } from 'lucide-react';
 import { useQuiz } from '@/hooks/useQuiz';
+import { useAuth } from '@/contexts/AuthContext';
 import QuizSection from './QuizSection';
 import QuizAlert from './QuizAlert';
 import QuizResults from './QuizResults';
+import MonthlyPerformance from './MonthlyPerformance';
 
 const QuizInterface = () => {
   const quiz = useQuiz();
+  const { user } = useAuth();
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
   const [showAlert, setShowAlert] = useState(false);
 
@@ -116,11 +119,29 @@ const QuizInterface = () => {
                   {isAttempted ? (
                     <div className="space-y-2">
                       <Badge variant="secondary" className="bg-green-100 text-green-800">
-                        Completed This Month
+                        Completed This Week
                       </Badge>
                       <p className="text-sm font-medium">
                         Score: {attempt.score.toFixed(2)} ({attempt.correct_answers}/10 correct)
                       </p>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Show quiz results for this attempt
+                          quiz.setQuizResults({
+                            score: attempt.score,
+                            correctAnswers: attempt.correct_answers,
+                            wrongAnswers: attempt.wrong_answers,
+                            totalQuestions: attempt.total_questions,
+                            answers: attempt.answers
+                          });
+                          quiz.setQuizCompleted(true);
+                        }}
+                      >
+                        See Answers
+                      </Button>
                     </div>
                   ) : (
                     <Button 
@@ -140,29 +161,8 @@ const QuizInterface = () => {
         })}
       </div>
 
-      {Object.keys(quiz.weeklyAttempts).length > 0 && (
-        <Card className="mt-8">
-          <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-4">This Month's Performance</h3>
-            <div className="grid md:grid-cols-3 gap-4">
-              {sections.map((section) => {
-                const attempt = quiz.weeklyAttempts[section.name];
-                if (!attempt) return null;
-
-                return (
-                  <div key={section.name} className="text-center p-4 bg-muted rounded-lg">
-                    <h4 className="font-medium">{section.name}</h4>
-                    <p className="text-2xl font-bold text-primary">{attempt.score.toFixed(2)}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {attempt.correct_answers}/10 correct
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      {/* Monthly Performance Section */}
+      <MonthlyPerformance userId={user?.id} />
     </div>
   );
 };
