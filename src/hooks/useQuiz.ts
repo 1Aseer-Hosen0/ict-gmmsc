@@ -5,9 +5,9 @@ import { useToast } from '@/hooks/use-toast';
 
 export interface Question {
   id: string;
-  section: string;
+  category: string;
   question: string;
-  correct_answer: string;
+  answer: string;
 }
 
 export interface QuizAttempt {
@@ -17,7 +17,6 @@ export interface QuizAttempt {
   total_questions: number;
   correct_answers: number;
   wrong_answers: number;
-  week_id: number;
   completed_at: string;
 }
 
@@ -32,26 +31,21 @@ export const useQuiz = () => {
   const [quizStarted, setQuizStarted] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizResults, setQuizResults] = useState<any>(null);
+  const [selectedSection, setSelectedSection] = useState<string>('');
   const [weeklyAttempts, setWeeklyAttempts] = useState<Record<string, QuizAttempt>>({});
 
-  // Get current week ID
-  const getCurrentWeekId = () => {
-    const now = new Date();
-    const day = now.getDate();
-    return Math.ceil(day / 7);
-  };
-
-  // Check if user has attempted quiz this week
+  // Check if user has attempted quiz for each category this month
   const checkWeeklyAttempts = async () => {
     if (!user) return;
 
     try {
-      const weekId = getCurrentWeekId();
+      // Get attempts for current month
+      const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
       const { data, error } = await supabase
         .from('quiz_attempts')
         .select('*')
         .eq('user_id', user.id)
-        .eq('week_id', weekId);
+        .gte('created_at', startOfMonth.toISOString());
 
       if (error) throw error;
 
@@ -61,7 +55,7 @@ export const useQuiz = () => {
       });
       setWeeklyAttempts(attempts);
     } catch (error) {
-      console.error('Error checking weekly attempts:', error);
+      console.error('Error checking monthly attempts:', error);
     }
   };
 
@@ -70,32 +64,28 @@ export const useQuiz = () => {
     if (!user) return;
 
     setLoading(true);
+    setSelectedSection(section);
+    
     try {
-      const weekId = getCurrentWeekId();
-      
-      // First check if questions exist for this week
-      const { data: existingQuestions, error: fetchError } = await supabase
+      // Fetch questions from the selected category
+      const { data: fetchedQuestions, error: fetchError } = await supabase
         .from('quiz_questions')
         .select('*')
-        .eq('section', section)
-        .eq('week_id', weekId)
-        .order('created_at');
+        .eq('category', section)
+        .order('created_at', { ascending: false });
 
       if (fetchError) throw fetchError;
 
-      if (existingQuestions && existingQuestions.length > 0) {
-        setQuestions(existingQuestions);
-      } else {
-        // Generate new questions
-        const { data, error } = await supabase.functions.invoke('generate-quiz-questions', {
-          body: { section, weekId }
-        });
-
-        if (error) throw error;
-        setQuestions(data.questions);
+      if (!fetchedQuestions || fetchedQuestions.length === 0) {
+        throw new Error('No questions available for this category');
       }
 
-      setUserAnswers(new Array(10).fill(''));
+      // Shuffle and take 10 questions
+      const shuffled = fetchedQuestions.sort(() => 0.5 - Math.random());
+      const selectedQuestions = shuffled.slice(0, 10);
+
+      setQuestions(selectedQuestions);
+      setUserAnswers(new Array(selectedQuestions.length).fill(''));
       setCurrentQuestionIndex(0);
       setQuizCompleted(false);
       setQuizResults(null);
@@ -103,7 +93,7 @@ export const useQuiz = () => {
       console.error('Error loading questions:', error);
       toast({
         title: "Error",
-        description: "Failed to load quiz questions",
+        description: "Failed to load quiz questions. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -159,60 +149,79 @@ export const useQuiz = () => {
     setQuizCompleted(true);
 
     try {
-      // Validate each answer with AI
-      const validationPromises = userAnswers.map(async (answer, index) => {
-        if (!answer.trim()) return { isCorrect: false, userAnswer: answer };
+      // Validate answers with simple string comparison
+      const validatedAnswers = [];
+      let correctCount = 0;
+      let wrongCount = 0;
 
-        const { data, error } = await supabase.functions.invoke('validate-answer', {
-          body: {
-            question: questions[index].question,
-            correctAnswer: questions[index].correct_answer,
-            userAnswer: answer
-          }
+      for (let i = 0; i < questions.length; i++) {
+        const question = questions[i];
+        const userAnswer = userAnswers[i].trim();
+
+        if (userAnswer === '') {
+          // Empty answer counts as wrong
+          validatedAnswers.push({
+            question_id: question.id,
+            user_answer: userAnswer,
+            correct_answer: question.answer,
+            is_correct: false
+          });
+          wrongCount++;
+          continue;
+        }
+
+        // Simple string comparison (case-insensitive)
+        const isCorrect = userAnswer.toLowerCase() === question.answer.toLowerCase();
+
+        validatedAnswers.push({
+          question_id: question.id,
+          user_answer: userAnswer,
+          correct_answer: question.answer,
+          is_correct: isCorrect
         });
 
-        if (error) throw error;
-        return { isCorrect: data.isCorrect, userAnswer: answer };
-      });
+        isCorrect ? correctCount++ : wrongCount++;
+      }
 
-      const results = await Promise.all(validationPromises);
-      
-      const correctAnswers = results.filter(r => r.isCorrect).length;
-      const wrongAnswers = results.filter(r => !r.isCorrect).length;
-      const score = correctAnswers * 1 - wrongAnswers * 0.25;
+      // Calculate score with negative marking (1 point for correct, -0.25 for wrong)
+      const score = (correctCount * 1) + (wrongCount * -0.25);
 
-      // Save attempt to database
+      // Save quiz attempt
       const { error: insertError } = await supabase
         .from('quiz_attempts')
         .insert({
           user_id: user.id,
-          section: questions[0].section,
-          answers: results,
-          score,
+          section: selectedSection,
+          answers: validatedAnswers,
+          score: score,
           total_questions: questions.length,
-          correct_answers: correctAnswers,
-          wrong_answers: wrongAnswers,
-          week_id: getCurrentWeekId()
+          correct_answers: correctCount,
+          wrong_answers: wrongCount
         });
 
       if (insertError) throw insertError;
 
       setQuizResults({
-        score,
-        correctAnswers,
-        wrongAnswers,
+        score: score,
+        correctAnswers: correctCount,
+        wrongAnswers: wrongCount,
         totalQuestions: questions.length,
-        results
+        answers: validatedAnswers
       });
 
-      // Refresh weekly attempts
+      // Refresh monthly attempts
       await checkWeeklyAttempts();
+
+      toast({
+        title: "Quiz Completed!",
+        description: `You scored ${score.toFixed(2)} out of ${questions.length}`,
+      });
 
     } catch (error) {
       console.error('Error submitting quiz:', error);
       toast({
         title: "Error",
-        description: "Failed to submit quiz",
+        description: "Failed to submit quiz. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -258,6 +267,7 @@ export const useQuiz = () => {
     quizCompleted,
     quizResults,
     weeklyAttempts,
+    selectedSection,
     loadQuestions,
     startQuiz,
     submitQuiz,
@@ -265,7 +275,6 @@ export const useQuiz = () => {
     nextQuestion,
     previousQuestion,
     goToQuestion,
-    checkWeeklyAttempts,
-    getCurrentWeekId
+    checkWeeklyAttempts
   };
 };

@@ -116,7 +116,7 @@ const QuizInterface = () => {
                   {isAttempted ? (
                     <div className="space-y-2">
                       <Badge variant="secondary" className="bg-green-100 text-green-800">
-                        Completed This Week
+                        Completed This Month
                       </Badge>
                       <p className="text-sm font-medium">
                         Score: {attempt.score.toFixed(2)} ({attempt.correct_answers}/10 correct)
@@ -143,7 +143,7 @@ const QuizInterface = () => {
       {Object.keys(quiz.weeklyAttempts).length > 0 && (
         <Card className="mt-8">
           <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-4">This Week's Performance</h3>
+            <h3 className="text-lg font-semibold mb-4">This Month's Performance</h3>
             <div className="grid md:grid-cols-3 gap-4">
               {sections.map((section) => {
                 const attempt = quiz.weeklyAttempts[section.name];

@@ -26,12 +26,13 @@ export const useLeaderboard = () => {
       const leaderboardData = data || [];
       setLeaderboard(leaderboardData.slice(0, 5)); // Top 5
 
-      // Find current user's rank
+      // Find current user's rank (only if rank is 6 or higher)
       if (user) {
         const currentUserRank = leaderboardData.find((entry: LeaderboardEntry) => 
           entry.user_id === user.id
         );
-        setUserRank(currentUserRank || null);
+        // Only show user rank if they're not in top 5
+        setUserRank(currentUserRank && currentUserRank.rank_position > 5 ? currentUserRank : null);
       }
 
     } catch (error) {

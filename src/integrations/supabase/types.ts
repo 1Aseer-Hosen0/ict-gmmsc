@@ -246,7 +246,6 @@ export type Database = {
           section: string
           total_questions: number
           user_id: string
-          week_id: number
           wrong_answers: number
         }
         Insert: {
@@ -259,7 +258,6 @@ export type Database = {
           section: string
           total_questions?: number
           user_id: string
-          week_id: number
           wrong_answers?: number
         }
         Update: {
@@ -272,7 +270,6 @@ export type Database = {
           section?: string
           total_questions?: number
           user_id?: string
-          week_id?: number
           wrong_answers?: number
         }
         Relationships: [
@@ -287,28 +284,25 @@ export type Database = {
       }
       quiz_questions: {
         Row: {
-          correct_answer: string
+          answer: string
+          category: string
           created_at: string
           id: string
           question: string
-          section: string
-          week_id: number
         }
         Insert: {
-          correct_answer: string
+          answer: string
+          category: string
           created_at?: string
           id?: string
           question: string
-          section: string
-          week_id: number
         }
         Update: {
-          correct_answer?: string
+          answer?: string
+          category?: string
           created_at?: string
           id?: string
           question?: string
-          section?: string
-          week_id?: number
         }
         Relationships: []
       }

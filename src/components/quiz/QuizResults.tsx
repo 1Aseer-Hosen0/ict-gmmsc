@@ -121,7 +121,7 @@ const QuizResults: React.FC<QuizResultsProps> = ({ results, questions, onBackToS
                     <div className="grid md:grid-cols-2 gap-2 text-sm">
                       <div>
                         <span className="font-medium text-green-600">Correct Answer:</span>
-                        <p className="bg-green-50 p-2 rounded mt-1">{question.correct_answer}</p>
+                        <p className="bg-green-50 p-2 rounded mt-1">{question.answer}</p>
                       </div>
                       
                       <div>
