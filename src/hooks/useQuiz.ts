@@ -178,24 +178,14 @@ export const useQuiz = () => {
         const userAnswer = userAnswers[i].trim();
 
         if (userAnswer === '') {
-          // Empty answer - don't count as wrong if database answer is also empty
-          if (!question.answer || question.answer.trim() === '') {
-            validatedAnswers.push({
-              question_id: question.id,
-              user_answer: userAnswer,
-              correct_answer: question.answer,
-              is_correct: true
-            });
-            correctCount++;
-          } else {
-            validatedAnswers.push({
-              question_id: question.id,
-              user_answer: userAnswer,
-              correct_answer: question.answer,
-              is_correct: false
-            });
-            wrongCount++;
-          }
+          // Empty answer - don't count as wrong (no negative marking for unanswered)
+          validatedAnswers.push({
+            question_id: question.id,
+            user_answer: userAnswer,
+            correct_answer: question.answer,
+            is_correct: false,
+            is_blank: true
+          });
           continue;
         }
 

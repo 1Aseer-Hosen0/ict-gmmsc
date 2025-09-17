@@ -29,8 +29,14 @@ const QuizInterface = () => {
   };
 
   const handleSectionSelect = (sectionName: string) => {
-    setSelectedSection(sectionName);
-    setShowAlert(true);
+    const categoryMap: Record<string, string> = {
+      'Science': 'science',
+      'General Knowledge': 'general-knowledge',
+      'IQ': 'iq'
+    };
+    
+    const urlCategory = categoryMap[sectionName];
+    window.location.href = `/quests/${urlCategory}`;
   };
 
   const handleStartQuiz = async () => {
@@ -129,15 +135,13 @@ const QuizInterface = () => {
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
-                          // Show quiz results for this attempt
-                          quiz.setQuizResults({
-                            score: attempt.score,
-                            correctAnswers: attempt.correct_answers,
-                            wrongAnswers: attempt.wrong_answers,
-                            totalQuestions: attempt.total_questions,
-                            answers: attempt.answers
-                          });
-                          quiz.setQuizCompleted(true);
+                          const categoryMap: Record<string, string> = {
+                            'Science': 'science',
+                            'General Knowledge': 'general-knowledge',
+                            'IQ': 'iq'
+                          };
+                          const urlCategory = categoryMap[section.name];
+                          window.location.href = `/quests/${urlCategory}/result`;
                         }}
                       >
                         See Answers
