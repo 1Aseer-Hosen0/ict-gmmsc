@@ -21,11 +21,12 @@ const GeneralKnowledgeQuiz = () => {
   }, [isAuthenticated, loading, navigate]);
 
   useEffect(() => {
-    if (isAuthenticated && !quiz.loading) {
-      quiz.loadQuestions('General Knowledge');
-      quiz.startQuiz();
+    if (isAuthenticated && !quiz.quizStarted && !quiz.loading && quiz.questions.length === 0) {
+      quiz.loadQuestions('General Knowledge').then(() => {
+        quiz.startQuiz();
+      });
     }
-  }, [isAuthenticated, quiz.loading]);
+  }, [isAuthenticated, quiz.quizStarted, quiz.loading]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
