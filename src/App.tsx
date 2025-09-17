@@ -21,6 +21,9 @@ import ScienceQuiz from "./pages/quiz/ScienceQuiz";
 import GeneralKnowledgeQuiz from "./pages/quiz/GeneralKnowledgeQuiz";
 import IQQuiz from "./pages/quiz/IQQuiz";
 import QuizResult from "./pages/quiz/QuizResult";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import CodeOfConduct from "./pages/CodeOfConduct";
 import ScrollToTop from "./components/sections/ScrollToTop";
 
 const queryClient = new QueryClient();
@@ -52,6 +55,9 @@ const App = () => (
             <Route path="/quests/general-knowledge" element={<GeneralKnowledgeQuiz />} />
             <Route path="/quests/iq" element={<IQQuiz />} />
             <Route path="/quests/:category/result" element={<QuizResult />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/code-of-conduct" element={<CodeOfConduct />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

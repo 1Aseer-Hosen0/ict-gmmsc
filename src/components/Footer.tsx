@@ -186,27 +186,30 @@ const Footer = () => {
             </div>
             
             <div className="flex items-center space-x-6 text-sm">
-              <motion.a
-                href="#"
-                whileHover={{ scale: 1.05 }}
-                className="text-muted-foreground hover:text-club-blue transition-colors"
-              >
-                Privacy Policy
-              </motion.a>
-              <motion.a
-                href="#"
-                whileHover={{ scale: 1.05 }}
-                className="text-muted-foreground hover:text-club-blue transition-colors"
-              >
-                Terms of Service
-              </motion.a>
-              <motion.a
-                href="#"
-                whileHover={{ scale: 1.05 }}
-                className="text-muted-foreground hover:text-club-blue transition-colors"
-              >
-                Code of Conduct
-              </motion.a>
+              <motion.div whileHover={{ scale: 1.05 }}>
+                <Link
+                  to="/privacy-policy"
+                  className="text-muted-foreground hover:text-club-blue transition-colors"
+                >
+                  Privacy Policy
+                </Link>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }}>
+                <Link
+                  to="/terms-of-service"
+                  className="text-muted-foreground hover:text-club-blue transition-colors"
+                >
+                  Terms of Service
+                </Link>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }}>
+                <Link
+                  to="/code-of-conduct"
+                  className="text-muted-foreground hover:text-club-blue transition-colors"
+                >
+                  Code of Conduct
+                </Link>
+              </motion.div>
             </div>
           </div>
         </motion.div>
